@@ -113,8 +113,8 @@ $APPLICATION->SetTitle('Оформить ипотеку');
 
                     <div class="filter-field-title">Дата рождения</div>
                     <div class="filter-price it-block">
-                        <input type="date" value="" name="date" id="date"
-                               class="filter-price-input filter-max-value-input" placeholder="Дата рождения">
+                        <input type="text" value="" name="date" id="date"
+                               class="filter-price-input filter-max-value-input js-datepicker" placeholder="Дата рождения">
                         <div class="it-error"></div>
                     </div>
                     <div class="filter-field-title">№ телефона</div>
