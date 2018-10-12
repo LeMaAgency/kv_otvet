@@ -15,8 +15,12 @@ $rsUsers = CUser::GetList(
     )
     )
 );
+/**
+ * Bitrix can not search by array of ID.. We need to make it "by-hand"
+ */
 while ($arUser = $rsUsers->Fetch()) {
-    $arSpecUser[] = $arUser;
+    if($arUser['ID'] != 8)
+        $arSpecUser[] = $arUser;
 }
 $arResult['ITEMS'] = $arSpecUser;
 
