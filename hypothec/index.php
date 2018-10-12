@@ -10,7 +10,7 @@ $APPLICATION->SetTitle('Ипотека');
             </div>
         </div>
     </div>
-    <div class="content-page_color">
+    <div class="content-page_color banner-fullscreen">
         <? $APPLICATION->IncludeComponent(
 	"bitrix:news.detail", 
 	"blocks_list", 

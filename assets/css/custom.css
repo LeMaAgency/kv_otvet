@@ -758,3 +758,7 @@ h2.seller_main__h2 {
 .personal-hypotec.row.new-rieltor{
     margin-bottom: 40px !important;
 }
+.banner-fullscreen .chosen {
+    -webkit-background-size: 100%;
+    background-size: 100%;
+}

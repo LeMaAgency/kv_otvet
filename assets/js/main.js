@@ -4,7 +4,8 @@ $(document).ready(function () {
         margin: 0,
         loop: true,
         nav: true,
-        dots: true
+        dots: true,
+        autoplay: true
     });
 
 
