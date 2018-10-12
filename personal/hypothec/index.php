@@ -181,6 +181,7 @@ $APPLICATION->SetTitle('Оформить ипотеку');
                     <div class="filter-price it-block">
                         <input type="text" value="" name="QUANTITY_MINOR_CHILDREN" class="filter-price-input filter-max-value-input"
                                placeholder="Количество детей до 18 лет">
+                        <small>Оставьте поле пустым, если детей до 18 лет нет</small>
                         <div class="it-error"></div>
                     </div>
                 </div>
