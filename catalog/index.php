@@ -652,6 +652,7 @@ $GLOBALS['arrFilter']['PROPERTY_RENT_TYPE_VALUE'] = $typeFilter;
                                 'AJAX_OPTION_STYLE' => 'Y',
                                 'AJAX_OPTION_HISTORY' => 'N',
                                 'AJAX_OPTION_ADDITIONAL' => '',
+                                'ROOM_MAP_ID' => 'map',
                             )); ?>
                         </div>
                     </div>
@@ -733,6 +734,7 @@ $GLOBALS['arrFilter']['PROPERTY_RENT_TYPE_VALUE'] = $typeFilter;
                                 'AJAX_OPTION_STYLE' => 'Y',
                                 'AJAX_OPTION_HISTORY' => 'N',
                                 'AJAX_OPTION_ADDITIONAL' => '',
+                                'ROOM_MAP_ID' => 'map-2',
                             )); ?>
                         </div>
                     </div>
@@ -814,6 +816,7 @@ $GLOBALS['arrFilter']['PROPERTY_RENT_TYPE_VALUE'] = $typeFilter;
                                 'AJAX_OPTION_STYLE' => 'Y',
                                 'AJAX_OPTION_HISTORY' => 'N',
                                 'AJAX_OPTION_ADDITIONAL' => '',
+                                'ROOM_MAP_ID' => 'map-3',
                             )); ?>
                         </div>
                     </div>
@@ -895,6 +898,7 @@ $GLOBALS['arrFilter']['PROPERTY_RENT_TYPE_VALUE'] = $typeFilter;
                                     'AJAX_OPTION_STYLE' => 'Y',
                                     'AJAX_OPTION_HISTORY' => 'N',
                                     'AJAX_OPTION_ADDITIONAL' => '',
+                                    'ROOM_MAP_ID' => 'map-4',
                                 )); ?>
                             </div>
                         </div>

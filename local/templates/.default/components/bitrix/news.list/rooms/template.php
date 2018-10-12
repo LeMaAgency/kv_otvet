@@ -24,7 +24,7 @@ $data = new TH($this);
 ?>
 <?if($data->itemCount()):?>
     <div class="col-sm-6">
-        <div id="map-2" class="new-flats__map"></div>
+        <div id="<?=$arParams['ROOM_MAP_ID'];?>" class="new-flats__map"></div>
     </div>
     <div class="col-sm-6">
         <?foreach($data->items() as $item):?>

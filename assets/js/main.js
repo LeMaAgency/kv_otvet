@@ -233,7 +233,7 @@ $(document).ready(function () {
         $(idActive).show();
         initMapCatalog();
     });
-
+    $('.new-flats__tab-nav.active').first().trigger('click');
 });
 
 //$(document).ready(function () {
