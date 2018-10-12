@@ -359,21 +359,29 @@ if (($APPLICATION->GetCurDir() != '/' && $APPLICATION->GetCurDir() != 'catalog')
                              data-property-code="<?= ($arItem['INPUT_NAME'] == "arrFilter_ff[ID]") ? $filterFields['ID'] : $filterFields[$arItem['CODE']] ?>">
                             <div>
                                 <div class="filter-field-title"><?= $arItem["NAME"] ?></div>
-                                <div class="filter-select">
-                                    <a href="#" class="filter-select-link">Выбрать</a>
-                                    <ul class="filter-select-drop">
-                                        <li data-value="">Выбрать</li>
-                                        <? foreach ($arItem["LIST"] as $key => $value): ?>
-                                            <li data-value="<?= htmlspecialcharsBx($key) ?>"
-                                                <? if ($key == $arItem["INPUT_VALUE"]) echo ' class="selected"' ?>
-                                            ><?= htmlspecialcharsEx($value) ?></li>
-                                        <? endforeach; ?>
-                                    </ul>
-                                    <input type="hidden"
+                                <?if($arItem['INPUT_NAME'] == "arrFilter_ff[ID]"):?>
+                                    <input type="text"
+                                           class="filter-price-input"
                                            name="<?= $checkTypeObject ? $arItem["INPUT_NAME"] : ''; ?>"
                                            data-name="<?= $arItem["INPUT_NAME"] ?>"
                                            value="<?= empty($arItem["INPUT_VALUE"]) ? null : $arItem["INPUT_VALUE"]; ?>">
-                                </div>
+                                <?else:?>
+                                    <div class="filter-select">
+                                        <a href="#" class="filter-select-link">Выбрать</a>
+                                        <ul class="filter-select-drop">
+                                            <li data-value="">Выбрать</li>
+                                            <? foreach ($arItem["LIST"] as $key => $value): ?>
+                                                <li data-value="<?= htmlspecialcharsBx($key) ?>"
+                                                    <? if ($key == $arItem["INPUT_VALUE"]) echo ' class="selected"' ?>
+                                                ><?= htmlspecialcharsEx($value) ?></li>
+                                            <? endforeach; ?>
+                                        </ul>
+                                        <input type="hidden"
+                                               name="<?= $checkTypeObject ? $arItem["INPUT_NAME"] : ''; ?>"
+                                               data-name="<?= $arItem["INPUT_NAME"] ?>"
+                                               value="<?= empty($arItem["INPUT_VALUE"]) ? null : $arItem["INPUT_VALUE"]; ?>">
+                                    </div>
+                                <?endif;?>
                             </div>
                         </div>
                     <? elseif ($arItem["TYPE"] == "CHECKBOX"):
