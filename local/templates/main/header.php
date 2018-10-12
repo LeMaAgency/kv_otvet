@@ -30,10 +30,12 @@ global $APPLICATION;
             '/assets/css/nouislider.css',
             '/assets/css/main.css',
             '/assets/css/media.css',
+            '/assets/css/jquery-ui-1.12.1.min.css',
             '/assets/css/custom.css',
         ))
         ->addJsArray(array(
             '/assets/js/jquery-3.2.1.min.js',
+            '/assets/js/jquery-ui-1.12.1.min.js',
             '/assets/js/jquery.fancybox.min.js',
             '/assets/js/owl.carousel.min.js',
             '/assets/js/nouislider.min.js',

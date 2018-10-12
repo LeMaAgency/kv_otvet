@@ -539,6 +539,12 @@ $(document).ready(function () {
 
         }, 'json');
     });
+
+    $('.js-datepicker').datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+    console.log($.datepicker.regional);
+
 });
 
 $(document).on('click', '.js-filter-select-drop-realty-type li', function () {

@@ -73,14 +73,13 @@ $user = new \UserData();
 
                     <div class="filter-field-title">Дата рождения</div>
                     <div class="filter-price">
-                        <input type="date"
-                               value="
-                               <? if (!empty($user->get('PERSONAL_BIRTHDAY'))){
+                        <input type="text"
+                               value="<? if (!empty($user->get('PERSONAL_BIRTHDAY'))){
                                    echo date("Y-m-d", strtotime($user->get('PERSONAL_BIRTHDAY')));
                                }?>"
                                name="PERSONAL_BIRTHDAY"
                                id="PERSONAL_BIRTHDAY"
-                               class="filter-price-input filter-max-value-input"
+                               class="filter-price-input filter-max-value-input js-datepicker"
                                placeholder="Дата рождения">
                     </div>
                     <div class="filter-field-title ">Город</div>
