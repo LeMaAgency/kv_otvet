@@ -188,14 +188,14 @@ if (isset($uriParts[1])) {
                                 />
                             </div>
                             <div
-                                    data-min="<?= $arItem['INPUT_VALUES'][0]; ?>"
-                                    data-max="<?= $arItem['INPUT_VALUES'][1]; ?>"
+                                    data-min="<?//= $arItem['INPUT_VALUES'][0]; ?>"
+                                    data-max="<?//= $arItem['INPUT_VALUES'][1]; ?>"
                                     data-current-min="<?= $currentMin; ?>"
                                     data-current-max="<?= $currentMax; ?>"
                                     class="filter-price-slider"></div>
                             <div class="filter-price">
-                                <span class="filter-price-value filter-min-value"><?= $arItem['INPUT_VALUES'][0]; ?></span>
-                                <span class="filter-price-value filter-max-value"><?= $arItem['INPUT_VALUES'][1]; ?></span>
+                                <span class="filter-price-value filter-min-value"><?//= $arItem['INPUT_VALUES'][0]; ?>0</span>
+                                <span class="filter-price-value filter-max-value"><?//= $arItem['INPUT_VALUES'][1]; ?>999999999999</span>
                             </div>
                         <? else: ?>
                             <? if (!empty($arItem['INPUT_VALUES'][0]) && !empty($arItem['INPUT_VALUES'][1])): ?>
