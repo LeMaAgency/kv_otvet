@@ -51,9 +51,13 @@ class Basket extends HighloadBlock
      */
     public function __construct($userId = null)
     {
-        //get id of current user
-        $userId = $this->getOrGenerateUserId($userId);
-
+        global $USER;
+        if ($USER->IsAuthorized()) {
+            $userId = $USER->GetID();
+        } else {
+            //get id of current user
+            $userId = $this->getOrGenerateUserId($userId);
+        }
         //create positions for basket
         $this->basketPosition = new BasketPosition();
 
@@ -75,7 +79,7 @@ class Basket extends HighloadBlock
      */
     public static function get($userId = null)
     {
-        if(null === static::$_instance)
+        if (null === static::$_instance)
             static::$_instance = new static($userId);
         return static::$_instance;
     }
@@ -105,12 +109,11 @@ class Basket extends HighloadBlock
         ));
         $data = array();
 
-        while($row = $res->fetch())
+        while ($row = $res->fetch())
             $data[$row['ID']] = $row;
 
         //basket for this user doesn't exists yet, create it
-        if(empty($data))
-        {
+        if (empty($data)) {
             //add new basket for current user
             $this->addRecord(
                 Settings::BASKET_HLBLOCK_ID,
@@ -160,7 +163,7 @@ class Basket extends HighloadBlock
         //get basket
         $basket = $this->getBasket();
 
-        return isset($basket['ID']) ? (int) $basket['ID'] : 0;
+        return isset($basket['ID']) ? (int)$basket['ID'] : 0;
     }
 
     /**
@@ -206,10 +209,10 @@ class Basket extends HighloadBlock
      */
     public function getTotalPrice($formatted = false, $additionalData = ' руб.')
     {
-        if(empty($this->basketItems['PRODUCTS']))
+        if (empty($this->basketItems['PRODUCTS']))
             return 0;
         $sum = 0;
-        foreach($this->basketItems['PRODUCTS'] as $product)
+        foreach ($this->basketItems['PRODUCTS'] as $product)
             $sum += $product['SUM'];
         return $formatted ? $this->formatPrice($sum, $additionalData) : $sum;
     }
@@ -235,10 +238,10 @@ class Basket extends HighloadBlock
      */
     public function getProductsCount()
     {
-        if(empty($this->basketItems['PRODUCTS']))
+        if (empty($this->basketItems['PRODUCTS']))
             return 0;
         $cnt = 0;
-        foreach($this->basketItems['PRODUCTS'] as $product)
+        foreach ($this->basketItems['PRODUCTS'] as $product)
             $cnt += $product['QUANTITY'];
         return $cnt;
     }
@@ -259,7 +262,7 @@ class Basket extends HighloadBlock
         $this->checkLoaded();
 
         //product not found
-        if(empty($this->basketItems['PRODUCTS'][$positionId]))
+        if (empty($this->basketItems['PRODUCTS'][$positionId]))
             return false;
 
         //get specific product
@@ -328,31 +331,26 @@ class Basket extends HighloadBlock
         $basket = $this->getBasket();
 
         //check specific data
-        $checkId  = isset($data['UF_PRODUCT'])  ? (int) $data['UF_PRODUCT']  : 0;
-        $quantity = isset($data['UF_QUANTITY']) ? (int) $data['UF_QUANTITY'] : 0;
+        $checkId = isset($data['UF_PRODUCT']) ? (int)$data['UF_PRODUCT'] : 0;
+        $quantity = isset($data['UF_QUANTITY']) ? (int)$data['UF_QUANTITY'] : 0;
 
-        if(empty($checkId)) // || empty($quantity)
+        if (empty($checkId)) // || empty($quantity)
             return false;
 
         //check exists
         $foundId = false;
-        foreach($this->getProducts() as $positionId => $product)
-        {
+        foreach ($this->getProducts() as $positionId => $product) {
             //product is found, store it for update
-            if($product['PRODUCT_ID'] == $checkId)
-            {
+            if ($product['PRODUCT_ID'] == $checkId) {
                 $foundId = $positionId;
                 break;
             }
         }
 
         //record is found, just update count
-        if(false && $foundId)
-        {
+        if (false && $foundId) {
             $status = $this->updateCount($foundId, $quantity);
-        }
-        else
-        {
+        } else {
             //add new record
             $result = $this->addRecord(
                 Settings::POSITIONS_HLBLOCK_ID,
@@ -360,8 +358,7 @@ class Basket extends HighloadBlock
             );
 
             //successfully added
-            if($result && $result->isSuccess())
-            {
+            if ($result && $result->isSuccess()) {
                 //add id of new position
                 $basket['UF_PRODUCT_POSITION'][] = $result->getId();
 
@@ -385,7 +382,7 @@ class Basket extends HighloadBlock
     /**
      * Delete item from position
      * Also delete empty positions
-     * 
+     *
      * @param $removeId
      *
      * @return mixed
@@ -408,12 +405,12 @@ class Basket extends HighloadBlock
 
         //remove empty positions
         $status = $status && $this->updateRecord(
-            Settings::BASKET_HLBLOCK_ID,
-            $this->getBasketId(),
-            array(
-                'UF_PRODUCT_POSITION' => array_keys($this->getProducts()),
-            )
-        );
+                Settings::BASKET_HLBLOCK_ID,
+                $this->getBasketId(),
+                array(
+                    'UF_PRODUCT_POSITION' => array_keys($this->getProducts()),
+                )
+            );
 
         //update basket
         $this->loadByUserId($this->userId);
@@ -436,7 +433,7 @@ class Basket extends HighloadBlock
         //get basket
         $basket = $this->getBasket();
 
-        if(empty($basket['UF_PRODUCT_POSITION']))
+        if (empty($basket['UF_PRODUCT_POSITION']))
             return false;
 
         //delete
@@ -487,8 +484,7 @@ class Basket extends HighloadBlock
             'select' => array('ID', 'UF_PRODUCT_POSITION'),
             'filter' => array('<UF_DATETIME' => \Bitrix\Main\Type\DateTime::createFromTimestamp(\strtotime('-3 day'))),
         ));
-        while($row = $res->fetch())
-        {
+        while ($row = $res->fetch()) {
             //collect positions for delete
             $deletePositions = array_merge($deletePositions, $row['UF_PRODUCT_POSITION']);
             //delete basket
@@ -512,7 +508,7 @@ class Basket extends HighloadBlock
      */
     protected function checkLoaded()
     {
-        if(!$this->loaded)
+        if (!$this->loaded)
             throw new \LogicException('Корзина не загружена');
     }
 }
