@@ -308,7 +308,7 @@ function initMapCatalog() {
                     var map = new google.maps.Map(document.getElementById('map-' + (i + 1)), {
                         center: myLatLng,
                         zoom: 10,
-                        zoomControl: true,
+                        zoomControl: false,
                         mapTypeControl: false,
                         scaleControl: false,
                         streetViewControl: false,
