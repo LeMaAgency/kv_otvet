@@ -573,7 +573,7 @@ $GLOBALS['arrFilter']['PROPERTY_RENT_TYPE_VALUE'] = $typeFilter;
             global $roomNewElementFilter;
             $sectionCodes = explode('-', $currentSectionCode);
             ?>
-            <div class="tab-content">
+            <div class="tab-content" id="tab-content-map">
                 <div role="tabpanel" class="tab-pane" id="one-room">
                     <div class="container">
                         <div class="row">
@@ -652,7 +652,7 @@ $GLOBALS['arrFilter']['PROPERTY_RENT_TYPE_VALUE'] = $typeFilter;
                                 'AJAX_OPTION_STYLE' => 'Y',
                                 'AJAX_OPTION_HISTORY' => 'N',
                                 'AJAX_OPTION_ADDITIONAL' => '',
-                                'ROOM_MAP_ID' => 'map',
+                                'ROOM_MAP_ID' => 'map-1',
                             )); ?>
                         </div>
                     </div>

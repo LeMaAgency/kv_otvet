@@ -9,7 +9,7 @@ $(document).ready(function () {
     });
 
 
-    $('.filter-price-slider').each(function(i, el) {
+    $('.filter-price-slider').each(function (i, el) {
         var doubleHandleSlider = el;
         var minValInput = $(doubleHandleSlider).siblings('.filter-price').find('.filter-min-value-input').get(0);
         var maxValInput = $(doubleHandleSlider).siblings('.filter-price').find('.filter-max-value-input').get(0);
@@ -21,10 +21,10 @@ $(document).ready(function () {
         if (doubleHandleSlider !== null) {
             var defaultMin = 0,
                 defaultMax = 999999999999,
-                start = + ($(el).data('current-min') || defaultMin),
-                end = + ($(el).data('current-max') || defaultMax),
-                min = + ($(el).data('min') || defaultMin),
-                max = + ($(el).data('max') || defaultMax);
+                start = +($(el).data('current-min') || defaultMin),
+                end = +($(el).data('current-max') || defaultMax),
+                min = +($(el).data('min') || defaultMin),
+                max = +($(el).data('max') || defaultMax);
 
             // Price Slider
             noUiSlider.create(doubleHandleSlider, {
@@ -66,7 +66,7 @@ $(document).ready(function () {
             $(this).addClass('active filter-border-color');
             $('.filter-select-drop').find('li').click(function () {
                 var selectResult = $(this).html(),
-                    selectValue  = $(this).data('value');
+                    selectValue = $(this).data('value');
                 $(this).closest('.filter-select').find('input').val(selectValue);
                 $(this).closest('.filter-select').find('.filter-select-link').removeClass('active').html(selectResult);
                 dropBlock.slideUp();
@@ -94,13 +94,13 @@ $(document).ready(function () {
 
     //  ативация SelectFx для кастомизации селектов
     (function () {
-    [].slice.call(document.querySelectorAll('select.cs-select')).forEach(function (el) {
+        [].slice.call(document.querySelectorAll('select.cs-select')).forEach(function (el) {
             new SelectFx(el, {
-                onChange: function() {
+                onChange: function () {
                     var optText = $.trim($(el).closest('.js-sort').siblings('.cs-placeholder').text()),
                         option = $('.js-sort option:contains("' + optText + '")');
                     console.log(optText, option);
-                    if(option && option.data('url'))
+                    if (option && option.data('url'))
                         window.location.href = option.data('url');
                 }
             });
@@ -252,149 +252,97 @@ $(document).ready(function () {
 //  инициализация карт на странице catalog
 function initMapCatalog() {
 
-    var map,
-        map2,
-        map3,
-        map4,
-        myLatLng;
-
-    myLatLng = {
-        lat: 55.675201,
-        lng: 37.633140
-    };
-
-    if (document.getElementById('map') !== null) {
-
-        // Create a map object and specify the DOM element for display.
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: myLatLng,
-            zoom: 10,
-            zoomControl: false,
-            mapTypeControl: false,
-            scaleControl: false,
-            streetViewControl: false,
-            rotateControl: false,
-            fullscreenControl: false
-        });
-
-
-        var icons = {
-            newFlat: {
-                name: 'newFlat',
-                icon: '/assets/img/icons/place-mark.png'
+    var //Marker icons
+        icons = {
+            newFlat1: {
+                name: 'newFlat1',
+                icon: '/assets/img/icons/place-mark__1.png'
+            },
+            newFlat2: {
+                name: 'newFlat2',
+                icon: '/assets/img/icons/place-mark__2.png'
+            },
+            newFlat3: {
+                name: 'newFlat3',
+                icon: '/assets/img/icons/place-mark__3.png'
             }
-        };
-        var features = [
-            {
-                position: new google.maps.LatLng(55.717780, 37.701821),
-                type: 'newFlat'
-            }, {
-                position: new google.maps.LatLng(55.609196, 37.368095),
-                type: 'newFlat'
+        },
+        //Block numbers with objects
+        arQuantityRoom = ['one', 'two', 'three', 'four'];
+
+    document.getElementById("tab-content-map").querySelectorAll(".tab-pane").forEach(
+        function (panel, i) {
+
+            if (panel.querySelector("#map-" + (i + 1)) !== null) {
+
+                var features = [],
+                    myLatLng = [],
+                    bounds = new google.maps.LatLngBounds(),
+                    check = true;
+
+                document.getElementById(arQuantityRoom[i] + "-room").querySelectorAll(".map-coordinates").forEach(
+                    function (coordinates, i) {
+
+                        if (coordinates.dataset.lat == undefined || coordinates.dataset.lng == undefined) {
+                            return
+                        }
+
+                        features[i] = {
+                            position: new google.maps.LatLng(coordinates.dataset.lat, coordinates.dataset.lng),
+                            type: 'newFlat' + (i + 1),
+                            infowindow: new google.maps.InfoWindow({content: coordinates.dataset.address})
+                        };
+
+                        if (check) {
+                            //Map center default
+                            myLatLng = {
+                                lat: Number(coordinates.dataset.lat),
+                                lng: Number(coordinates.dataset.lng)
+                            };
+                            check = false;
+                        }
+                    }
+                );
+                if (features.length != 0) {
+                    // Create a map object and specify the DOM element for display.
+                    var map = new google.maps.Map(document.getElementById('map-' + (i + 1)), {
+                        center: myLatLng,
+                        zoom: 10,
+                        zoomControl: false,
+                        mapTypeControl: false,
+                        scaleControl: false,
+                        streetViewControl: false,
+                        rotateControl: false,
+                        fullscreenControl: false
+                    });
+
+
+                    // Create markers.
+                    features.forEach(function (feature) {
+                        var marker = new google.maps.Marker({
+                            position: feature.position,
+                            icon: icons[feature.type].icon,
+                            map: map
+                        });
+                        if (features.length > 1) {
+                            bounds.extend(feature.position);
+                        }
+
+                        if (feature.infowindow.content.length) {
+                            // Additional description as an address
+                            marker.addListener('click', function () {
+                                feature.infowindow.open(map, marker);
+                            });
+                        }
+                    });
+
+                    if (features.length > 1) {
+                        map.fitBounds(bounds);
+                    }
+                }
             }
-        ];
-        // Create markers.
-        features.forEach(function (feature) {
-            var marker = new google.maps.Marker({
-                position: feature.position,
-                icon: icons[feature.type].icon,
-                map: map
-            });
-        });
-
-        // Create a map object and specify the DOM element for display.
-        map2 = new google.maps.Map(document.getElementById('map-2'), {
-            center: myLatLng,
-            zoom: 10,
-            zoomControl: false,
-            mapTypeControl: false,
-            scaleControl: false,
-            streetViewControl: false,
-            rotateControl: false,
-            fullscreenControl: false
-        });
-
-        var features2 = [
-            {
-                position: new google.maps.LatLng(55.847757, 37.448378),
-                type: 'newFlat'
-            }, {
-                position: new google.maps.LatLng(55.820392, 37.741523),
-                type: 'newFlat'
-            }
-        ];
-
-        // Create markers.
-        features2.forEach(function (feature) {
-            var marker = new google.maps.Marker({
-                position: feature.position,
-                icon: icons[feature.type].icon,
-                map: map2
-            });
-        });
-
-        // Create a map object and specify the DOM element for display.
-        map3 = new google.maps.Map(document.getElementById('map-3'), {
-            center: myLatLng,
-            zoom: 10,
-            zoomControl: false,
-            mapTypeControl: false,
-            scaleControl: false,
-            streetViewControl: false,
-            rotateControl: false,
-            fullscreenControl: false
-        });
-
-        var features3 = [
-            {
-                position: new google.maps.LatLng(55.717780, 37.701821),
-                type: 'newFlat'
-            }, {
-                position: new google.maps.LatLng(55.609196, 37.368095),
-                type: 'newFlat'
-            }
-        ];
-
-        // Create markers.
-        features3.forEach(function (feature) {
-            var marker = new google.maps.Marker({
-                position: feature.position,
-                icon: icons[feature.type].icon,
-                map: map3
-            });
-        });
-
-        // Create a map object and specify the DOM element for display.
-        var map4 = new google.maps.Map(document.getElementById('map-4'), {
-            center: myLatLng,
-            zoom: 10,
-            zoomControl: false,
-            mapTypeControl: false,
-            scaleControl: false,
-            streetViewControl: false,
-            rotateControl: false,
-            fullscreenControl: false
-        });
-
-        var features4 = [
-            {
-                position: new google.maps.LatLng(55.847757, 37.448378),
-                type: 'newFlat'
-            }, {
-                position: new google.maps.LatLng(55.820392, 37.741523),
-                type: 'newFlat'
-            }
-        ];
-
-        // Create markers.
-        features4.forEach(function (feature) {
-            var marker = new google.maps.Marker({
-                position: feature.position,
-                icon: icons[feature.type].icon,
-                map: map4
-            });
-        });
-    }
+        }
+    );
 }
 
 //  инициализация карт на странице map
@@ -409,8 +357,7 @@ function initMap() {
     };
     if (document.getElementById('map-location-flat') !== null) {
         var coords = $('#map-location-flat').data('coords');
-        if(coords && (coords = coords.split(',')))
-        {
+        if (coords && (coords = coords.split(','))) {
             myLatLng = {
                 lat: parseFloat(coords[0]),
                 lng: parseFloat(coords[1])
@@ -459,134 +406,134 @@ function initialize() {
 
     var greyScaleMapType = new google.maps.StyledMapType(
         [{
-                "featureType": "water",
-                "elementType": "geometry",
-                "stylers": [{
-                    "color": "#e9e9e9"
-                    }, {
-                    "lightness": 17
-                    }]
-                },
+            "featureType": "water",
+            "elementType": "geometry",
+            "stylers": [{
+                "color": "#e9e9e9"
+            }, {
+                "lightness": 17
+            }]
+        },
             {
                 "featureType": "landscape",
                 "elementType": "geometry",
                 "stylers": [{
                     "color": "#f5f5f5"
-                    }, {
+                }, {
                     "lightness": 20
-                    }]
-                },
+                }]
+            },
             {
                 "featureType": "road.highway",
                 "elementType": "geometry.fill",
                 "stylers": [{
                     "color": "#ffffff"
-                    }, {
+                }, {
                     "lightness": 17
-                    }]
-                },
+                }]
+            },
             {
                 "featureType": "road.highway",
                 "elementType": "geometry.stroke",
                 "stylers": [{
                     "color": "#ffffff"
-                    }, {
+                }, {
                     "lightness": 29
-                    }, {
+                }, {
                     "weight": 0.2
-                    }]
-                },
+                }]
+            },
             {
                 "featureType": "road.arterial",
                 "elementType": "geometry",
                 "stylers": [{
                     "color": "#ffffff"
-                    }, {
+                }, {
                     "lightness": 18
-                    }]
-                },
+                }]
+            },
             {
                 "featureType": "road.local",
                 "elementType": "geometry",
                 "stylers": [{
                     "color": "#ffffff"
-                    }, {
+                }, {
                     "lightness": 16
-                    }]
-                },
+                }]
+            },
             {
                 "featureType": "poi",
                 "elementType": "geometry",
                 "stylers": [{
                     "color": "#f5f5f5"
-                    }, {
+                }, {
                     "lightness": 21
-                    }]
-                },
+                }]
+            },
             {
                 "featureType": "poi.park",
                 "elementType": "geometry",
                 "stylers": [{
                     "color": "#dedede"
-                    }, {
+                }, {
                     "lightness": 21
-                    }]
-                },
+                }]
+            },
             {
                 "elementType": "labels.text.stroke",
                 "stylers": [{
                     "visibility": "on"
-                    }, {
+                }, {
                     "color": "#ffffff"
-                    }, {
+                }, {
                     "lightness": 16
-                    }]
-                },
+                }]
+            },
             {
                 "elementType": "labels.text.fill",
                 "stylers": [{
                     "saturation": 36
-                    }, {
+                }, {
                     "color": "#333333"
-                    }, {
+                }, {
                     "lightness": 40
-                    }]
-                },
+                }]
+            },
             {
                 "elementType": "labels.icon",
                 "stylers": [{
                     "visibility": "off"
-                    }]
-                },
+                }]
+            },
             {
                 "featureType": "transit",
                 "elementType": "geometry",
                 "stylers": [{
                     "color": "#f2f2f2"
-                    }, {
+                }, {
                     "lightness": 19
-                    }]
-                },
+                }]
+            },
             {
                 "featureType": "administrative",
                 "elementType": "geometry.fill",
                 "stylers": [{
                     "color": "#fefefe"
-                    }, {
+                }, {
                     "lightness": 20
-                    }]
-                },
+                }]
+            },
             {
                 "featureType": "administrative",
                 "elementType": "geometry.stroke",
                 "stylers": [{
                     "color": "#fefefe"
-                    }, {
+                }, {
                     "lightness": 17
-                    }, {
+                }, {
                     "weight": 1.2
-                    }]
-                }], {
+                }]
+            }], {
             name: 'greyScale'
         });
 
