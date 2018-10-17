@@ -307,7 +307,7 @@ function initMapCatalog() {
                     // Create a map object and specify the DOM element for display.
                     var map = new google.maps.Map(document.getElementById('map-' + (i + 1)), {
                         center: myLatLng,
-                        zoom: 10,
+                        zoom: 13,
                         zoomControl: false,
                         mapTypeControl: false,
                         scaleControl: false,
