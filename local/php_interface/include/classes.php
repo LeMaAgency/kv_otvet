@@ -150,9 +150,9 @@ class DomSakhExport extends \Lema\Base\XmlExport
         </location>
         <sales-agent>
             <nick>Kv-otvet</nick>
-            <name><?=$info['PROPERTY_USER_NAME_VALUE'];?></name>
+            <name><?=$info['name'];?></name>
             <phone><?=$info['work_phone'];?></phone>
-            <email><?=$info['PROPERTY_USER_EMAIL_VALUE'];?></email>
+            <email><?=$info['email'];?></email>
         </sales-agent>
         <price>
             <value><?=$info['PROPERTY_PRICE_VALUE'];?></value>
@@ -202,8 +202,9 @@ class DomSakhExport extends \Lema\Base\XmlExport
         {
             $description = trim($alternateDescr);
         }
+
         ?>
-        <description><?=htmlspecialcharsbx($description);?></description>
+        <description><?=$description;?></description> <?// htmlspecialcharsbx($description); ?>
 
         </offer>
 

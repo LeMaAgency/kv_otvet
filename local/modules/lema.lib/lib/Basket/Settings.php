@@ -11,11 +11,11 @@ class Settings
     /**
      * @var const - ID of position hlblock
      */
-    const POSITIONS_HLBLOCK_ID = 2;
+    const POSITIONS_HLBLOCK_ID = 3;
     /**
      * @var const - ID of basket hlblock
      */
-    const BASKET_HLBLOCK_ID = 1;
+    const BASKET_HLBLOCK_ID = 5;
     /**
      * @var const - ID of products iblock
      */

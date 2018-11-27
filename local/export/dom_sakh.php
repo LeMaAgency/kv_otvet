@@ -92,11 +92,15 @@ $yml->loadData(array(
                     "FIELDS" => array(
                         'ID',
                         'WORK_PHONE',
+                        'EMAIL',
+                        'NAME',
                     )
                 )
             );
             if ($arUser = $rsUsers->Fetch()) {
                 $data['work_phone'] = $arUser['WORK_PHONE'];
+                $data['name'] = $arUser['NAME']; //$arUser['WORK_PHONE'];
+                $data['email'] = $arUser['EMAIL'];
             }
         }
 
@@ -174,11 +178,11 @@ $yml->loadData(array(
         $data['property-type'] = isset($propertyTypes[$propertyType]) ? $propertyTypes[$propertyType] : null;
 
         if ($data['PROPERTY_BALCONIES_COUNT_VALUE'] == 1)
-            $data['balkony'] = 'один';
+            $data['balcony'] = 'один';
         elseif ($data['PROPERTY_BALCONIES_COUNT_VALUE'] > 1)
-            $data['balkony'] = 'больше одного';
+            $data['balcony'] = 'больше одного';
         else
-            $data['balkony'] = $data['PROPERTY_LOGGIAS_COUNT_VALUE'] > 0 ? 'лоджия' : null;
+            $data['balcony'] = $data['PROPERTY_LOGGIAS_COUNT_VALUE'] > 0 ? 'лоджия' : null;
 
 
         $data['alarm'] = $data['PROPERTY_SECURITY_CONCIERGE_VALUE'] == 'Y' || $data['PROPERTY_SECURITY_ALARM_VALUE'] == 'Y';
@@ -209,7 +213,7 @@ $yml->showData(array(
         'bathroom-unit' => 'PROPERTY_BATHROOM_VALUE',
         'building-series' => 'PROPERTY_LAYOUT_TYPE_VALUE',
         'building-type' => 'PROPERTY_MATERIAL_VALUE',
-        'balkony' => 'balkony',
+        'balcony' => 'balcony',
         'news' => 'PROPERTY_SIDE_VALUE',
         'heating' => 'PROPERTY_HEATING_VALUE',
         'water' => 'PROPERTY_WATER_SUPPLY_VALUE',
