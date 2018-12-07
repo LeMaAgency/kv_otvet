@@ -485,6 +485,10 @@ class Basket extends HighloadBlock
             'filter' => array('<UF_DATETIME' => \Bitrix\Main\Type\DateTime::createFromTimestamp(\strtotime('-3 day'))),
         ));
         while ($row = $res->fetch()) {
+            //passes ID registered users
+            if(preg_match("/^[\d]+$/",$row['ID'])){
+                continue;
+            }
             //collect positions for delete
             $deletePositions = array_merge($deletePositions, $row['UF_PRODUCT_POSITION']);
             //delete basket

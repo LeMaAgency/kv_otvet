@@ -16,7 +16,8 @@ $sections = \LIblock::getSectionsByIblockCode('objects', false);
 
 $yml->loadData(array(
     'arSelect' => array(
-        '*', 'DETAIL_PAGE_URL',
+        '*',
+        'DETAIL_PAGE_URL',
         'PROPERTY_PRICE',
         'PROPERTY_RIELTOR',
         'PROPERTY_MORE_PHOTO',

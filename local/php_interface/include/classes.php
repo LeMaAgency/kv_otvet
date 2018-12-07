@@ -153,6 +153,7 @@ class DomSakhExport extends \Lema\Base\XmlExport
             <name><?=$info['name'];?></name>
             <phone><?=$info['work_phone'];?></phone>
             <email><?=$info['email'];?></email>
+            <jabber>true</jabber>
         </sales-agent>
         <price>
             <value><?=$info['PROPERTY_PRICE_VALUE'];?></value>
