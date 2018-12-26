@@ -139,6 +139,9 @@ class AutoFit
      */
     public static function start($requestId, $startDateTime, $endDateTime)
     {
+        $_SERVER['DOCUMENT_ROOT'] = realpath(dirname(__FILE__).'/../..');
+        $DOCUMENT_ROOT = $_SERVER['DOCUMENT_ROOT'];
+        file_put_contents($DOCUMENT_ROOT . '/cron_run.txt', 'Адрес сайта: '.Helper::getFullUrl().' /  '.SITE_SERVER_NAME.' Дата/Время: '.date('d.m.Y H:i:s'). PHP_EOL, FILE_APPEND);
 
         /**
          * Remove old agents
