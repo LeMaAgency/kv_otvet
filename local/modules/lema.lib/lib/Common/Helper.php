@@ -100,7 +100,7 @@ abstract class Helper
      */
     public static function getFullUrl($url)
     {
-        return 'http' . (Request::get()->isHttps() ? 's' : '') . '://' . Server::get()->getServerName() . (0 === strpos($url, '/') ? $url : '/' . $url);
+        return 'http' . (Request::get()->isHttps() ? 's' : '') . '://' . SITE_SERVER_NAME . (0 === strpos($url, '/') ? $url : '/' . $url);
     }
 
     /**
