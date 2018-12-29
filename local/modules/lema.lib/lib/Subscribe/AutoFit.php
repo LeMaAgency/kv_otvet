@@ -167,7 +167,7 @@ class AutoFit
             return ;
 
         $filter = array (
-            'PROPERTY_REALTY_TYPE_VALUE' => is_array($request['PROPERTY_REALTY_TYPE_VALUE']) ? array_values($request['PROPERTY_REALTY_TYPE_VALUE']) : $request['PROPERTY_REALTY_TYPE_VALUE'],
+            'NAME' => is_array($request['PROPERTY_REALTY_TYPE_VALUE']) ? array_values($request['PROPERTY_REALTY_TYPE_VALUE']) : $request['PROPERTY_REALTY_TYPE_VALUE'],
             'PROPERTY_RENT_TYPE_VALUE' => is_array($request['PROPERTY_RENT_TYPE_VALUE']) ? array_values($request['PROPERTY_RENT_TYPE_VALUE']) : $request['PROPERTY_RENT_TYPE_VALUE'],
             'PROPERTY_ROOMS_COUNT' => $request['PROPERTY_ROOMS_COUNT_VALUE'],
             'PROPERTY_LAYOUT_TYPE_VALUE' => is_array($request['PROPERTY_LAYOUT_TYPE_VALUE']) ? array_values($request['PROPERTY_LAYOUT_TYPE_VALUE']) : $request['PROPERTY_LAYOUT_TYPE_VALUE'],
