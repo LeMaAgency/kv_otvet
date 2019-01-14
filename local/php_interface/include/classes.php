@@ -158,11 +158,14 @@ class DomSakhExport extends \Lema\Base\XmlExport
         <price>
             <value><?=$info['PROPERTY_PRICE_VALUE'];?></value>
         </price>
-        <?if(in_array($info['category'], array('дом', 'земля'))):?>
-            <land-space><?=$info['PROPERTY_SQUARE_VALUE'];?></land-space>
-        <?else:?>
-            <area><?=$info['PROPERTY_SQUARE_VALUE'];?></area>
-        <?endif;?>
+        <? if (in_array($info['category'], 'земля')):?>
+            <land-space><?= $info['PROPERTY_SQUARE_VALUE']; ?></land-space>
+        <? elseif (in_array($info['category'], 'дом')):?>
+            <land-space><?= $info['PROPERTY_SQUARE_VALUE']; ?></land-space>
+            <area><?= $info['PROPERTY_SQUARE_VALUE']; ?></area>
+        <? else:?>
+            <area><?= $info['PROPERTY_SQUARE_VALUE']; ?></area>
+        <? endif; ?>
 
         <?
         if(!empty($info['images'])):?>
