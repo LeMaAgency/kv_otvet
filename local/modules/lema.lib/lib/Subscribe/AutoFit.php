@@ -249,12 +249,13 @@ class AutoFit
 
             $sendData .= $splitLine;
         }
-
-        \CEvent::Send('AUTO_FIT', 's1', array(
-            'DATE' => date('d.m.Y'),
-            'OBJECTS' => $sendData,
-            'EMAIL_TO' => $request['PROPERTY_CLIENT_EMAIL_VALUE'],
-        ));
+        if($sendData){
+            \CEvent::Send('AUTO_FIT', 's1', array(
+                'DATE' => date('d.m.Y'),
+                'OBJECTS' => $sendData,
+                'EMAIL_TO' => $request['PROPERTY_CLIENT_EMAIL_VALUE'],
+            ));
+        }
 
         return sprintf(
             '\\%s::start(%d, "%s", "%s");',
