@@ -145,8 +145,6 @@ class LIblock
 
         $key = $byCode ? 'BY_CODE' : 'BY_ID';
 
-        var_dump(static::$iblockSections[$iblockId][$key]);
-        exit;
         if(isset(static::$iblockSections[$iblockId][$key][$sectionCodeOrId]))
             return static::$iblockSections[$iblockId][$key][$sectionCodeOrId];
 
