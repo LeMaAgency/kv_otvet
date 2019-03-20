@@ -145,6 +145,8 @@ class LIblock
 
         $key = $byCode ? 'BY_CODE' : 'BY_ID';
 
+        var_dump(static::$iblockSections[$iblockId][$key]);
+        exit;
         if(isset(static::$iblockSections[$iblockId][$key][$sectionCodeOrId]))
             return static::$iblockSections[$iblockId][$key][$sectionCodeOrId];
 
@@ -299,7 +301,7 @@ class LIblock
     {
         static::loadIBlocks();
 
-        $res = CIBlockSection::GetList(array(), array('ID', 'CODE', 'NAME', 'IBLOCK_ID', 'IBLOCK_SECTION_ID'));
+        $res = CIBlockSection::GetList(array(),array('CHECK_PERMISSIONS'=>'N'),false, array('ID', 'CODE', 'NAME', 'IBLOCK_ID', 'IBLOCK_SECTION_ID'));
 
         while($row = $res->Fetch())
         {
