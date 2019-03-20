@@ -148,7 +148,30 @@ $yml->loadData(array(
         $data['locality-name'] = $data['PROPERTY_CITY_VALUE'];
         $data['sub-locality-name'] = $data['PROPERTY_REGION_VALUE'];
 
-        $data['address'] = trim('ул. ' . $data['PROPERTY_STREET_VALUE'] . ', ' . $data['PROPERTY_HOUSE_NUMBER_VALUE']);
+        $arTempStreetVal = [
+            'проспект' => 'пр-т',
+            'проезд' => 'пр.',
+            'переулок' => 'пер.',
+            'набережная' => 'наб.',
+            'площадь' => 'пл.',
+            'бульвар' => 'б-р',
+            'линия' => 'линия',
+            'шоссе' => 'ш.',
+        ];
+        $arStreetVal = explode(' ',trim($data['PROPERTY_STREET_VALUE']));
+
+        $strStreetDefinition = mb_strtolower($arStreetVal[0]);
+        unset($arStreetVal[0]);
+
+        $strStreetName = implode(' ', $arStreetVal);
+
+        $strStreetVal =  'ул. ' . $data['PROPERTY_STREET_VALUE'];
+
+        if(isset($arTempStreetVal[$strStreetDefinition])){
+            $strStreetVal = $arTempStreetVal[$strStreetDefinition].' '.$strStreetName;
+        }
+
+        $data['address'] = trim($strStreetVal . ', ' . $data['PROPERTY_HOUSE_NUMBER_VALUE']);
 
         $data['images'] = array();
         if (!empty($data['DETAIL_PICTURE']))

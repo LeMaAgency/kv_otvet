@@ -166,9 +166,29 @@ class AutoFit
         if($request['PROPERTY_AUTOFIT_VALUE'] != 'Y')
             return ;
 
+        $arReplaceRentVal = [
+            'куплю' => 'продам',
+            'продам' => 'куплю',
+            'сдам' => 'сниму',
+            'сниму' => 'сдам',
+        ];
+        $arTempRentVal = [];
+
+        if(is_array($request['PROPERTY_RENT_TYPE_VALUE'])){
+            foreach ($request['PROPERTY_RENT_TYPE_VALUE'] as $rentValue){
+                if(isset($arReplaceRentVal[$rentValue])){
+                    $arTempRentVal[] = $arReplaceRentVal[$rentValue];
+                }
+            }
+        }else{
+            if(isset($arReplaceRentVal[$request['PROPERTY_RENT_TYPE_VALUE']])){
+                $arTempRentVal[] = $arReplaceRentVal[$request['PROPERTY_RENT_TYPE_VALUE']];
+            }
+        }
+
         $filter = array (
             'NAME' => is_array($request['PROPERTY_REALTY_TYPE_VALUE']) ? array_values($request['PROPERTY_REALTY_TYPE_VALUE']) : $request['PROPERTY_REALTY_TYPE_VALUE'],
-            'PROPERTY_RENT_TYPE_VALUE' => is_array($request['PROPERTY_RENT_TYPE_VALUE']) ? array_values($request['PROPERTY_RENT_TYPE_VALUE']) : $request['PROPERTY_RENT_TYPE_VALUE'],
+            'PROPERTY_RENT_TYPE_VALUE' => array_values($arTempRentVal),
             'PROPERTY_ROOMS_COUNT' => $request['PROPERTY_ROOMS_COUNT_VALUE'],
             'PROPERTY_LAYOUT_TYPE_VALUE' => is_array($request['PROPERTY_LAYOUT_TYPE_VALUE']) ? array_values($request['PROPERTY_LAYOUT_TYPE_VALUE']) : $request['PROPERTY_LAYOUT_TYPE_VALUE'],
             'PROPERTY_REGION_VALUE' => is_array($request['PROPERTY_REGION_VALUE']) ? array_values($request['PROPERTY_REGION_VALUE']) : $request['PROPERTY_REGION_VALUE'],
