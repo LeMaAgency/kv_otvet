@@ -1,6 +1,7 @@
 <?php
 
 namespace Lema\Subscribe;
+
 use Lema\Common\Helper;
 use Lema\IBlock\Element;
 
@@ -26,43 +27,42 @@ class AutoFit
          * Check how often we need to send autofit
          */
         $interval = 60 * 60 * 24;
-        switch($frequency)
-        {
+        switch ($frequency) {
             //day_1
             case 106:
                 $interval *= 1;
-            break;
+                break;
             //day_2
             case 107:
                 $interval *= 2;
-            break;
+                break;
             //day_3
             case 108:
                 $interval *= 3;
-            break;
+                break;
             //day_7
             case 109:
                 $interval *= 7;
-            break;
+                break;
             //day_14
             case 110:
                 $interval *= 14;
-            break;
+                break;
             //day_30
             case 111:
                 $interval *= 30;
-            break;
+                break;
             //day_1
             default:
                 $interval *= 1;
-            break;
+                break;
         }
 
         /**
          * Get start timestamp
          */
         $startDateTime = \DateTime::createFromFormat('d.m.Y H:i', $dateFrom . ' ' . $timeStart);
-        if($startDateTime->getTimestamp() < (new \DateTime('now'))->getTimestamp())
+        if ($startDateTime->getTimestamp() < (new \DateTime('now'))->getTimestamp())
             $startDateTime->modify('+1 day');
         /**
          * Get end timestamp
@@ -70,25 +70,23 @@ class AutoFit
         $endDateTime = \DateTime::createFromFormat('d.m.Y H:i', $dateTo . ' ' . $timeStart);
 
         $agentName = sprintf(
-            '\\%s::start(%d, "%s", "%s");',
+            '\\%s::start(%d, "%s", "%s", "%s");',
             get_class(),
             $requestId,
             $startDateTime->getTimestamp(),
-            $endDateTime->getTimestamp()
+            $endDateTime->getTimestamp(),
+            true
         );
 
-        if($endDateTime->getTimestamp() < $startDateTime->getTimestamp())
-        {
+        if ($endDateTime->getTimestamp() < $startDateTime->getTimestamp()) {
             static::removeAgent($requestId);
             return false;
         }
 
         //search existing agent
         $res = \CAgent::GetList(array('ID' => 'DESC'), array('NAME' => '\\' . get_class() . '::start(' . $requestId . ', %'));
-        if($row = $res->Fetch())
-        {
-            if($row['NAME'] != $agentName)
-            {
+        if ($row = $res->Fetch()) {
+            if ($row['NAME'] != $agentName) {
                 \CAgent::Update($row['ID'], array(
                     'NAME' => $agentName,
                     'USER_ID' => 1,
@@ -96,9 +94,7 @@ class AutoFit
                     'ACTIVE' => 'Y'
                 ));
             }
-        }
-        else
-        {
+        } else {
             //Agent is not exists, create it now
             \CAgent::AddAgent(
                 $agentName,
@@ -124,8 +120,7 @@ class AutoFit
     {
         //search existing agent
         $res = \CAgent::GetList(array('ID' => 'DESC'), array('NAME' => '\\' . get_class() . '::start(' . $requestId . ', %'));
-        if($row = $res->Fetch())
-        {
+        if ($row = $res->Fetch()) {
             \CAgent::Delete($row['ID']);
         }
     }
@@ -137,22 +132,22 @@ class AutoFit
      *
      * @return string|void
      */
-    public static function start($requestId, $startDateTime, $endDateTime)
+    public static function start($requestId, $startDateTime, $endDateTime, $new)
     {
 
         /**
          * Remove old agents
          */
-        if($startDateTime < time() && $endDateTime < time())
-        {
+
+        if ($startDateTime < time() && $endDateTime < time()) {
             static::removeAgent($requestId);
-            return ;
+            return;
         }
 
         \Bitrix\Main\Loader::includeModule('iblock');
 
         $arSelect = array(
-            'ID', 'NAME', 'DETAIL_PAGE_URL',
+            'ID', 'NAME', 'TIMESTAMP_X', 'DETAIL_PAGE_URL',
             'PROPERTY_REALTY_TYPE', 'PROPERTY_RENT_TYPE', 'PROPERTY_ROOMS_COUNT', 'PROPERTY_LAYOUT_TYPE',
             'PROPERTY_STAGE', 'PROPERTY_STAGES_COUNT', 'PROPERTY_REGION', 'PROPERTY_PRICE_FROM', 'PROPERTY_PRICE_TO',
             'PROPERTY_MATERIAL', 'PROPERTY_SQUARE_FROM', 'PROPERTY_LIFE_MASSIV_SNT', 'PROPERTY_HAVINGS_TYPE',
@@ -163,8 +158,8 @@ class AutoFit
             'arSelect' => $arSelect
         ));
 
-        if($request['PROPERTY_AUTOFIT_VALUE'] != 'Y')
-            return ;
+        if ($request['PROPERTY_AUTOFIT_VALUE'] != 'Y')
+            return;
 
         $arReplaceRentVal = [
             'куплю' => 'продам',
@@ -174,19 +169,19 @@ class AutoFit
         ];
         $arTempRentVal = [];
 
-        if(is_array($request['PROPERTY_RENT_TYPE_VALUE'])){
-            foreach ($request['PROPERTY_RENT_TYPE_VALUE'] as $rentValue){
-                if(isset($arReplaceRentVal[$rentValue])){
+        if (is_array($request['PROPERTY_RENT_TYPE_VALUE'])) {
+            foreach ($request['PROPERTY_RENT_TYPE_VALUE'] as $rentValue) {
+                if (isset($arReplaceRentVal[$rentValue])) {
                     $arTempRentVal[] = $arReplaceRentVal[$rentValue];
                 }
             }
-        }else{
-            if(isset($arReplaceRentVal[$request['PROPERTY_RENT_TYPE_VALUE']])){
+        } else {
+            if (isset($arReplaceRentVal[$request['PROPERTY_RENT_TYPE_VALUE']])) {
                 $arTempRentVal[] = $arReplaceRentVal[$request['PROPERTY_RENT_TYPE_VALUE']];
             }
         }
 
-        $filter = array (
+        $filter = array(
             'NAME' => is_array($request['PROPERTY_REALTY_TYPE_VALUE']) ? array_values($request['PROPERTY_REALTY_TYPE_VALUE']) : $request['PROPERTY_REALTY_TYPE_VALUE'],
             'PROPERTY_RENT_TYPE_VALUE' => array_values($arTempRentVal),
             'PROPERTY_ROOMS_COUNT' => $request['PROPERTY_ROOMS_COUNT_VALUE'],
@@ -201,48 +196,49 @@ class AutoFit
         );
 
 
-        foreach($filter as $k => $value)
-        {
-            if(empty($value))
-            {
+        foreach ($filter as $k => $value) {
+            if (empty($value)) {
                 unset($filter[$k]);
             }
         }
-        if(!empty($request['PROPERTY_PRICE_FROM_VALUE']))
+        if (!empty($request['PROPERTY_PRICE_FROM_VALUE']))
             $filter['>=PROPERTY_PRICE'] = $request['PROPERTY_PRICE_FROM_VALUE'];
-        if(!empty($request['PROPERTY_PRICE_TO_VALUE']))
+        if (!empty($request['PROPERTY_PRICE_TO_VALUE']))
             $filter['<=PROPERTY_PRICE'] = $request['PROPERTY_PRICE_TO_VALUE'];
 
         $realtyTypes = $rentTypes = array();
-        foreach(\LIblock::getPropEnumValues(\LIblock::getPropId('objects', 'REALTY_TYPE')) as $k => $v)
+        foreach (\LIblock::getPropEnumValues(\LIblock::getPropId('objects', 'REALTY_TYPE')) as $k => $v)
             $realtyTypes[$v['VALUE']] = $k;
-        foreach(\LIblock::getPropEnumValues(\LIblock::getPropId('objects', 'RENT_TYPE')) as $k => $v)
+        foreach (\LIblock::getPropEnumValues(\LIblock::getPropId('objects', 'RENT_TYPE')) as $k => $v)
             $rentTypes[$v['VALUE']] = $k;
 
         $splitLine = '<br>' . str_repeat('-', 125) . '<br>';
         $sendData = null;
-        foreach(Element::getAll(\LIblock::getId('objects'), array('filter' => $filter, 'arSelect' => $arSelect)) as $item)
-        {
+        foreach (Element::getAll(\LIblock::getId('objects'), array('filter' => $filter, 'arSelect' => $arSelect)) as $item) {
+            if (!$new) {
+                if (strtotime($item['TIMESTAMP_X']) < $startDateTime) {
+                    continue;
+                }
+            }
 
-            switch($request['PROPERTY_STAGE_VALUE'])
-            {
+            switch ($request['PROPERTY_STAGE_VALUE']) {
                 case 'not_last':
                 case 'not_last_2':
-                    if($item['PROPERTY_STAGE_VALUE'] == $item['PROPERTY_STAGES_COUNT_VALUE'])
+                    if ($item['PROPERTY_STAGE_VALUE'] == $item['PROPERTY_STAGES_COUNT_VALUE'])
                         continue;
-                break;
+                    break;
                 case 'not_first':
-                    if($item['PROPERTY_STAGE_VALUE'] == 1)
+                    if ($item['PROPERTY_STAGE_VALUE'] == 1)
                         continue;
-                break;
+                    break;
                 case 'first':
-                    if($item['PROPERTY_STAGE_VALUE'] != 1)
+                    if ($item['PROPERTY_STAGE_VALUE'] != 1)
                         continue;
-                break;
+                    break;
                 case 'last':
-                    if($item['PROPERTY_STAGE_VALUE'] != $item['PROPERTY_STAGES_COUNT_VALUE'])
+                    if ($item['PROPERTY_STAGE_VALUE'] != $item['PROPERTY_STAGES_COUNT_VALUE'])
                         continue;
-                break;
+                    break;
             }
 
             $url = Helper::getFullUrl(strtr($item['DETAIL_PAGE_URL'], array(
@@ -256,20 +252,21 @@ class AutoFit
                 $item['NAME'],
                 $url,
                 $url,
-                (is_array($item['PROPERTY_REALTY_TYPE_VALUE'])  ? join(', ', $item['PROPERTY_REALTY_TYPE_VALUE'])   : $item['PROPERTY_REALTY_TYPE_VALUE']),
-                (is_array($item['PROPERTY_RENT_TYPE_VALUE'])    ? join(', ', $item['PROPERTY_RENT_TYPE_VALUE'])     : $item['PROPERTY_RENT_TYPE_VALUE']),
-                (is_array($item['PROPERTY_ROOMS_COUNT_VALUE'])  ? join(', ', $item['PROPERTY_ROOMS_COUNT_VALUE'])   : $item['PROPERTY_ROOMS_COUNT_VALUE']),
-                (is_array($item['PROPERTY_LAYOUT_TYPE_VALUE'])  ? join(', ', $item['PROPERTY_LAYOUT_TYPE_VALUE'])   : $item['PROPERTY_LAYOUT_TYPE_VALUE']),
-                (is_array($item['PROPERTY_STAGE_VALUE'])        ? join(', ', $item['PROPERTY_STAGE_VALUE'])         : $item['PROPERTY_STAGE_VALUE']),
-                (is_array($item['PROPERTY_REGION_VALUE'])       ? join(', ', $item['PROPERTY_REGION_VALUE'])        : $item['PROPERTY_REGION_VALUE']),
-                (is_array($item['PROPERTY_MATERIAL_VALUE'])     ? join(', ', $item['PROPERTY_MATERIAL_VALUE'])      : $item['PROPERTY_MATERIAL_VALUE'])
+                (is_array($item['PROPERTY_REALTY_TYPE_VALUE']) ? join(', ', $item['PROPERTY_REALTY_TYPE_VALUE']) : $item['PROPERTY_REALTY_TYPE_VALUE']),
+                (is_array($item['PROPERTY_RENT_TYPE_VALUE']) ? join(', ', $item['PROPERTY_RENT_TYPE_VALUE']) : $item['PROPERTY_RENT_TYPE_VALUE']),
+                (is_array($item['PROPERTY_ROOMS_COUNT_VALUE']) ? join(', ', $item['PROPERTY_ROOMS_COUNT_VALUE']) : $item['PROPERTY_ROOMS_COUNT_VALUE']),
+                (is_array($item['PROPERTY_LAYOUT_TYPE_VALUE']) ? join(', ', $item['PROPERTY_LAYOUT_TYPE_VALUE']) : $item['PROPERTY_LAYOUT_TYPE_VALUE']),
+                (is_array($item['PROPERTY_STAGE_VALUE']) ? join(', ', $item['PROPERTY_STAGE_VALUE']) : $item['PROPERTY_STAGE_VALUE']),
+                (is_array($item['PROPERTY_REGION_VALUE']) ? join(', ', $item['PROPERTY_REGION_VALUE']) : $item['PROPERTY_REGION_VALUE']),
+                (is_array($item['PROPERTY_MATERIAL_VALUE']) ? join(', ', $item['PROPERTY_MATERIAL_VALUE']) : $item['PROPERTY_MATERIAL_VALUE'])
             );
-            if(!empty($item['PROPERTY_LIFE_MASSIV_SNT_VALUE']))
+            if (!empty($item['PROPERTY_LIFE_MASSIV_SNT_VALUE']))
                 $sendData .= ';Жилой массив, СНТ: ' . $item['PROPERTY_LIFE_MASSIV_SNT_VALUE'];
 
             $sendData .= $splitLine;
         }
-        if($sendData){
+
+        if ($sendData) {
             \CEvent::Send('AUTO_FIT', 's1', array(
                 'DATE' => date('d.m.Y'),
                 'OBJECTS' => $sendData,
@@ -278,11 +275,12 @@ class AutoFit
         }
 
         return sprintf(
-            '\\%s::start(%d, "%s", "%s");',
+            '\\%s::start(%d, "%s", "%s","%s");',
             get_class(),
             $requestId,
             $startDateTime,
-            $endDateTime
+            $endDateTime,
+            '0'
         );
     }
 }
