@@ -168,7 +168,7 @@ $yml->loadData(array(
         $strStreetVal =  'ул. ' . $data['PROPERTY_STREET_VALUE'];
 
         if(isset($arTempStreetVal[$strStreetDefinition])){
-            $strStreetVal = $strStreetName; // $arTempStreetVal[$strStreetDefinition].' '.$strStreetName;
+            $strStreetVal = trim($data['PROPERTY_STREET_VALUE']); // $arTempStreetVal[$strStreetDefinition].' '.$strStreetName;
         }
 
         $data['address'] = trim($strStreetVal . ', ' . $data['PROPERTY_HOUSE_NUMBER_VALUE']);
