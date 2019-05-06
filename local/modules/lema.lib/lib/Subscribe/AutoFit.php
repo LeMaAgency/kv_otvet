@@ -132,7 +132,7 @@ class AutoFit
      *
      * @return string|void
      */
-    public static function start($requestId, $startDateTime, $endDateTime, $new)
+    public static function start($requestId, $startDateTime, $endDateTime, $new, $prevRunTime)
     {
 
         /**
@@ -216,7 +216,7 @@ class AutoFit
         $sendData = null;
         foreach (Element::getAll(\LIblock::getId('objects'), array('filter' => $filter, 'arSelect' => $arSelect)) as $item) {
             if (!$new) {
-                if (strtotime($item['TIMESTAMP_X']) < $startDateTime) {
+                if (strtotime($item['TIMESTAMP_X']) < $prevRunTime) {
                     continue;
                 }
             }
@@ -275,12 +275,13 @@ class AutoFit
         }
 
         return sprintf(
-            '\\%s::start(%d, "%s", "%s","%s");',
+            '\\%s::start(%d, "%s", "%s","%s",%d);',
             get_class(),
             $requestId,
             $startDateTime,
             $endDateTime,
-            '0'
+            '0',
+            time()
         );
     }
 }
