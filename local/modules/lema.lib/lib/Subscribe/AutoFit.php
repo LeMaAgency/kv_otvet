@@ -214,6 +214,16 @@ class AutoFit
 
         $splitLine = '<br>' . str_repeat('-', 125) . '<br>';
         $sendData = null;
+
+        $stagePropEnumID = \CIBlockPropertyEnum::GetList(
+            [],
+            [
+                'IBLOCK_ID' => 16,
+                'CODE' => 'STAGE',
+                'VALUE' => $request['PROPERTY_STAGE_VALUE']
+            ]
+        )->Fetch();
+
         foreach (Element::getAll(\LIblock::getId('objects'), array('filter' => $filter, 'arSelect' => $arSelect)) as $item) {
             if (!$new) {
                 if (strtotime($item['TIMESTAMP_X']) < $prevRunTime) {
@@ -221,23 +231,23 @@ class AutoFit
                 }
             }
 
-            switch ($request['PROPERTY_STAGE_VALUE']) {
+            switch ($stagePropEnumID['XML_ID']) {
                 case 'not_last':
                 case 'not_last_2':
                     if ($item['PROPERTY_STAGE_VALUE'] == $item['PROPERTY_STAGES_COUNT_VALUE'])
-                        continue;
+                        continue 2;
                     break;
                 case 'not_first':
                     if ($item['PROPERTY_STAGE_VALUE'] == 1)
-                        continue;
+                        continue 2;
                     break;
                 case 'first':
                     if ($item['PROPERTY_STAGE_VALUE'] != 1)
-                        continue;
+                        continue 2;
                     break;
                 case 'last':
                     if ($item['PROPERTY_STAGE_VALUE'] != $item['PROPERTY_STAGES_COUNT_VALUE'])
-                        continue;
+                        continue 2;
                     break;
             }
 
