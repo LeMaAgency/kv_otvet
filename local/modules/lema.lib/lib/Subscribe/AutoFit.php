@@ -193,6 +193,8 @@ class AutoFit
             'PROPERTY_SQUARE_FROM' => $request['PROPERTY_SQUARE_FROM_VALUE'],
             'PROPERTY_LIFE_MASSIV_SNT' => $request['PROPERTY_LIFE_MASSIV_SNT_VALUE'],
             'PROPERTY_HAVINGS_TYPE_VALUE' => is_array($request['PROPERTY_HAVINGS_TYPE_ENUM_ID']) ? array_values($request['PROPERTY_HAVINGS_TYPE_ENUM_ID']) : $request['PROPERTY_HAVINGS_TYPE_ENUM_ID'],
+            'SECTION_CODE' => 'active',
+            'INCLUDE_SUBSECTIONS' => 'Y',
         );
 
 
