@@ -86,7 +86,7 @@ $yml->loadData(array(
         }
         if (!empty($data['PROPERTY_RIELTOR_VALUE'])) {
             $rsUsers = \CUser::GetList(
-                $by = array("UF_SORT"=>"asc","NAME"=>"desc"),
+                $by = array("UF_SORT" => "asc", "NAME" => "desc"),
                 $order = "desc",
                 Array("GROUPS_ID" => Array(5), 'ACTIVE' => 'Y', 'ID' => $data['PROPERTY_RIELTOR_VALUE']),
                 Array(
@@ -158,16 +158,16 @@ $yml->loadData(array(
             'линия' => 'линия',
             'шоссе' => 'ш.',
         ];
-        $arStreetVal = explode(' ',trim($data['PROPERTY_STREET_VALUE']));
+        $arStreetVal = explode(' ', trim($data['PROPERTY_STREET_VALUE']));
 
         $strStreetDefinition = mb_strtolower($arStreetVal[0]);
         unset($arStreetVal[0]);
 
         $strStreetName = implode(' ', $arStreetVal);
 
-        $strStreetVal =  'ул. ' . $data['PROPERTY_STREET_VALUE'];
+        $strStreetVal = 'ул. ' . $data['PROPERTY_STREET_VALUE'];
 
-        if(isset($arTempStreetVal[$strStreetDefinition])){
+        if (isset($arTempStreetVal[$strStreetDefinition])) {
             $strStreetVal = trim($data['PROPERTY_STREET_VALUE']); // $arTempStreetVal[$strStreetDefinition].' '.$strStreetName;
         }
 
@@ -211,6 +211,12 @@ $yml->loadData(array(
 
         $data['alarm'] = $data['PROPERTY_SECURITY_CONCIERGE_VALUE'] == 'Y' || $data['PROPERTY_SECURITY_ALARM_VALUE'] == 'Y';
 
+        $data['building-type'] = $data['PROPERTY_MATERIAL_VALUE'];
+        if (($key = array_search('газопеноблок', $data['building-type'])) !== false) {
+            $data['building-type'][$key] = 'газо,пеноблок';
+        }
+
+
         return $data;
     },
 ));
@@ -236,7 +242,7 @@ $yml->showData(array(
         'floors-total' => 'PROPERTY_STAGES_COUNT_VALUE',
         'bathroom-unit' => 'PROPERTY_BATHROOM_VALUE',
         'building-series' => 'PROPERTY_LAYOUT_TYPE_VALUE',
-        'building-type' => 'PROPERTY_MATERIAL_VALUE',
+        'building-type' => 'building-type',
         'balcony' => 'balcony',
         'news' => 'PROPERTY_SIDE_VALUE',
         'heating' => 'PROPERTY_HEATING_VALUE',
